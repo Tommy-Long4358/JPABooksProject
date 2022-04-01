@@ -28,12 +28,12 @@ public class Books {
 	@Column(name = "YEAR_PUBLISHED", nullable = false)
 	private int yearPublished;
 
-	@ManyToOne
-	@JoinColumn(name = "AUTHORING_ENTITY_NAME")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "AUTHORING_ENTITY_NAME", nullable = false)
 	private Authoring_Entities author;
 
-	@ManyToOne
-	@JoinColumn(name = "PUBLISHER_NAME")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PUBLISHER_NAME", nullable = false)
 	private Publishers publisher;
 
 	public Books() {}

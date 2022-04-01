@@ -21,13 +21,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -194,11 +192,72 @@ public class JPABooksProject {
 	}
 
 	private static boolean addAuthoringEntity(Scanner scanner) {
-		// TODO
-		return false;
+		while (true) {
+			try {
+
+				displayAuthorTypesMenu();
+
+				String response = promptForString(scanner, "Choose an author type (#), or Q to cancel: ");
+				if (response.trim().equalsIgnoreCase("q")) return false;
+
+				int choice = Integer.parseInt(response);
+				if (choice <= 0 || choice > 3) throw new IllegalArgumentException("Please select a number 1-3.");
+
+				switch (choice) {
+					case 1 -> { return addWritingGroup(scanner); }
+					case 2 -> {}
+					case 3 -> {}
+				}
+
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage() + "; Please try again.");
+			}
+		}
+	}
+
+	private static void displayAuthorTypesMenu() {
+		System.out.println("\n******** AUTHORING ENTITY TYPES ********");
+		System.out.println("1. Writing Group");
+		System.out.println("2. Individual Author");
+		System.out.println("3. Ad Hoc Team");
 	}
 
 	// types of authoring entity
+	private static boolean addWritingGroup(Scanner scanner) {
+		while (true) {
+			try {
+
+				String name = promptForString(scanner, "Enter the Writing Group name: ");
+				if (name.trim().isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
+				else if (name.length() > 80) throw new IllegalArgumentException("Name cannot exceed 80 characters long.");
+
+				String email = promptForString(scanner, "Enter the Writing Group email: ");
+				if (email.trim().isEmpty()) throw new IllegalArgumentException("Email cannot be empty.");
+				else if (email.length() > 30) throw new IllegalArgumentException("Email cannot exceed 30 characters long.");
+
+				String headWriter = promptForString(scanner, "Enter the Head Writer name: ");
+				if (headWriter.trim().isEmpty()) throw new IllegalArgumentException("Head Writer name cannot be empty.");
+				else if (headWriter.length() > 80) throw new IllegalArgumentException("Head Writer name cannot exceed 80 characters long.");
+
+				String yearFormedStr = promptForString(scanner, "Enter the year formed: ");
+				if (yearFormedStr.trim().isEmpty()) throw new IllegalArgumentException("Year formed cannot be empty.");
+				int yearFormed = Integer.parseInt(yearFormedStr);
+
+				Writing_Groups writingGroup = new Writing_Groups();
+				writingGroup.setName(name);
+				writingGroup.setEmail(email);
+				writingGroup.setHeadWriter(headWriter);
+				writingGroup.setYearFormed(yearFormed);
+
+				jpa.entityManager.persist(writingGroup);
+
+				return true;
+
+			} catch (Exception e) {
+				System.out.println("Error: " + e.getMessage() + "; Please try again.");
+			}
+		}
+	}
 
 	private static boolean addPublisher(Scanner scanner) {
 		while (true) {
