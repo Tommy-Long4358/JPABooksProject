@@ -48,6 +48,8 @@ public class JPABooksProject {
 	 */
 	private static final Logger LOGGER = Logger.getLogger(JPABooksProject.class.getName());
 
+
+	// A static reference to the JPA project instance so that entities can be persisted from static methods
 	private static JPABooksProject jpa;
 
 	/**
@@ -125,6 +127,12 @@ public class JPABooksProject {
 		scanner.close();
 	} // End of the main method
 
+	/**
+	 * Display the main menu and prompt the user to make a choice.
+	 * @param scanner the scanner to use for getting input
+	 * @return an {@code int} representing the user's choice, with -1 representing
+	 * 			the choice to quit the application
+	 */
 	private static int promptForMainMenuChoice(Scanner scanner) {
 		boolean success = false;
 		int result = 0;
@@ -145,6 +153,9 @@ public class JPABooksProject {
 		return result;
 	}
 
+	/**
+	 * Display the main menu.
+	 */
 	private static void displayMainMenu() {
 		System.out.println("\n******** MAIN MENU ********");
 		System.out.println("1. Add a new object");
@@ -154,6 +165,15 @@ public class JPABooksProject {
 		System.out.println("\nOr enter Q to quit.\n");
 	}
 
+	/**
+	 * Guide thr user through the process of adding an entity
+	 * to the database. This method will display a menu and prompt
+	 * the user for a choice of what to add, then delegate the
+	 * rest of the process to the appropriate method for that object type.
+	 * @param scanner the scanner to use for input
+	 * @return {@code true} if the user successfully completes the add operation,
+	 * 			or {@code false} if the operation fails or the user chooses to cancel
+	 */
 	private static boolean performAddOperation(Scanner scanner) {
 		boolean success = false;
 
@@ -184,6 +204,9 @@ public class JPABooksProject {
 		return true;
 	}
 
+	/**
+	 * Display the menu of object types to add.
+	 */
 	private static void displayAddMenu() {
 		System.out.println("\n******** ADD MENU ********");
 		System.out.println("1. Add new Authoring Entity");
@@ -191,6 +214,15 @@ public class JPABooksProject {
 		System.out.println("3. Add new Book");
 	}
 
+	/**
+	 * Guide the user into the process of adding an authoring entity.
+	 * Displays a menu for different authoring entity types and
+	 * prompts the user for a choice, then delegates the rest of the
+	 * process to the appropriate method.
+	 * @param scanner the scanner to use for getting input
+	 * @return {@code true} if the user completes the process successfully,
+	 * 			or {@code false} if the process fails or the user chooses to cancel
+	 */
 	private static boolean addAuthoringEntity(Scanner scanner) {
 		while (true) {
 			try {
@@ -215,6 +247,9 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display the menu of authoring entity types.
+	 */
 	private static void displayAuthorTypesMenu() {
 		System.out.println("\n******** AUTHORING ENTITY TYPES ********");
 		System.out.println("1. Writing Group");
@@ -222,24 +257,38 @@ public class JPABooksProject {
 		System.out.println("3. Ad Hoc Team");
 	}
 
-	// types of authoring entity
+
+	/**
+	 * Guide the user through the process of adding a writing group.
+	 * Prompts the user for the group's name, email, head writer, and
+	 * year formed. If the user enters valid values for all of these,
+	 * the writing group is created and persisted in the database. If
+	 * any invalid values are entered, the user will be prompted to
+	 * try again; the user can also choose to cancel the operation.
+	 * @param scanner the scanner to use for getting input
+	 * @return {@code true} if the user successfully completes the operation,
+	 * 			or {@code false} if the user chooses to cancel.
+	 */
 	private static boolean addWritingGroup(Scanner scanner) {
 		while (true) {
 			try {
-
-				String name = promptForString(scanner, "Enter the Writing Group name: ");
+				String name = promptForString(scanner, "Enter the Writing Group name, or Q to cancel: ");
+				if (name.trim().equalsIgnoreCase("q")) return false;
 				if (name.trim().isEmpty()) throw new IllegalArgumentException("Name cannot be empty.");
 				else if (name.length() > 80) throw new IllegalArgumentException("Name cannot exceed 80 characters long.");
 
-				String email = promptForString(scanner, "Enter the Writing Group email: ");
+				String email = promptForString(scanner, "Enter the Writing Group email, or Q to cancel: ");
+				if (email.trim().equalsIgnoreCase("q")) return false;
 				if (email.trim().isEmpty()) throw new IllegalArgumentException("Email cannot be empty.");
 				else if (email.length() > 30) throw new IllegalArgumentException("Email cannot exceed 30 characters long.");
 
-				String headWriter = promptForString(scanner, "Enter the Head Writer name: ");
+				String headWriter = promptForString(scanner, "Enter the Head Writer name, or Q to cancel: ");
+				if (headWriter.trim().equalsIgnoreCase("q")) return false;
 				if (headWriter.trim().isEmpty()) throw new IllegalArgumentException("Head Writer name cannot be empty.");
 				else if (headWriter.length() > 80) throw new IllegalArgumentException("Head Writer name cannot exceed 80 characters long.");
 
-				String yearFormedStr = promptForString(scanner, "Enter the year formed: ");
+				String yearFormedStr = promptForString(scanner, "Enter the year formed, or Q to cancel: ");
+				if (yearFormedStr.trim().equalsIgnoreCase("q")) return false;
 				if (yearFormedStr.trim().isEmpty()) throw new IllegalArgumentException("Year formed cannot be empty.");
 				int yearFormed = Integer.parseInt(yearFormedStr);
 
@@ -259,6 +308,16 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Guide the user through the process of adding a publisher. Prompts
+	 * the user for the publisher's name, email, and phone. If the user enters
+	 * valid values for all of these, the publisher is created and persisted
+	 * in the database. If any invalid values are entered, the user will be
+	 * prompted to try again; the user can also choose to cancel the operation.
+	 * @param scanner the scanner to use for getting input
+	 * @return {@code true} if the user successfully completes the operation,
+	 * 			or {@code false} if the user chooses to cancel.
+	 */
 	private static boolean addPublisher(Scanner scanner) {
 		while (true) {
 			try {
@@ -293,6 +352,17 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Guide the user through the process of adding a book. Prompts
+	 * the user for the book's publisher, author, ISBN, publication year,
+	 * and title. If the user enters valid values for all of these, the
+	 * book is created and persisted in the database. If any invalid
+	 * values are entered, the user will be prompted to try again;
+	 * the user can also choose to cancel the operation.
+	 * @param scanner the scanner to use for getting input
+	 * @return {@code true} if the user successfully completes the operation,
+	 *  		or {@code false} if the user chooses to cancel.
+	 */
 	private static boolean addBook(Scanner scanner) {
 		// Cannot add book if there are no publishers or authors
 		if (getAuthors().isEmpty() || getPublishers().isEmpty()) {
@@ -348,6 +418,16 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Guide the user through the process of retrieving information
+	 * about an entity from the database. Displays a menu of available
+	 * object types to retrieve information about, and prompts the
+	 * user for a choice. The rest of the process will be delegated to
+	 * the appropriate method(s).
+	 * @param scanner the scanner to use for getting input
+	 * @return {@code true} if the user successfully completes the operation,
+	 *   		or {@code false} if the user chooses to cancel.
+	 */
 	private static boolean performInfoOperation(Scanner scanner) {
 		while (true) {
 			try {
@@ -387,6 +467,9 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display the menu of entity types to retrieve information for.
+	 */
 	private static void displayInfoMenu() {
 		System.out.println("\n******** INFO MENU ********");
 		System.out.println("1. Get Publisher Info");
@@ -394,6 +477,10 @@ public class JPABooksProject {
 		System.out.println("3. Get Writing Group Info");
 	}
 
+	/**
+	 * Display the name, email, and phone of a publisher.
+	 * @param publisher the publisher retrieved from the database
+	 */
 	private static void displayPublisherInfo(Publishers publisher) {
 		System.out.println("\n******** PUBLISHER INFO ********");
 		System.out.println("Publisher Name : " + publisher.getName());
@@ -402,6 +489,10 @@ public class JPABooksProject {
 		System.out.println();
 	}
 
+	/**
+	 * Display the title, author, year published, publisher, and ISBN of a book.
+	 * @param book the book retrieved from the database
+	 */
 	private static void displayBookInfo(Books book) {
 		System.out.println("\n******** BOOK INFO ********");
 		System.out.println("Book Title:     " + book.getTitle());
@@ -412,6 +503,10 @@ public class JPABooksProject {
 		System.out.println();
 	}
 
+	/**
+	 * Display the name, email, head writer, and year formed of a writing group.
+	 * @param writingGroup the writing group retrieved from the database
+	 */
 	private static void displayWritingGroupInfo(Writing_Groups writingGroup) {
 		System.out.println("\n******** WRITING GROUP INFO ********");
 		System.out.println("Writing Group Name:        " + writingGroup.getName());
@@ -436,6 +531,14 @@ public class JPABooksProject {
 		return false;
 	}
 
+	/**
+	 * Display a list of books retrieved from the database, and
+	 * prompt the user for a choice.
+	 * @param scanner the scanner to use for getting input
+	 * @return the {@code Books} object corresponding to the user's choice,
+	 * 			or {@code null} if the user chooses to cancel or there are
+	 * 			no existing books in the database
+	 */
 	private static Books promptForBookChoice(Scanner scanner) {
 		List<Books> books = getBooks();
 		if (books.isEmpty()) {
@@ -464,6 +567,10 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display a list of books as a numbered list.
+	 * @param books the list of books to display
+	 */
 	private static void displayAvailableBooks(List<Books> books) {
 		System.out.println("\n******** AVAILABLE BOOKS ********");
 		// print all options
@@ -480,6 +587,14 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display a list of writing groups retrieved from the database,
+	 * and prompt the user for a choice.
+	 * @param scanner the scanner to use for getting input
+	 * @return the {@code Writing_Groups} object corresponding to the user's
+	 * 			choice, or {@code null} if the user chooses to cancel or there
+	 * 			are no existing writing groups in the database
+	 */
 	private static Writing_Groups promptForWritingGroupChoice(Scanner scanner) {
 		List<Writing_Groups> writingGroups = getWritingGroups();
 		if (writingGroups.isEmpty()) {
@@ -509,6 +624,10 @@ public class JPABooksProject {
 
 	}
 
+	/**
+	 * Display a list of writing groups as a numbered list.
+	 * @param writingGroups the list of writing groups to display
+	 */
 	private static void displayAvailableWritingGroups(List<Writing_Groups> writingGroups) {
 		System.out.println("\n******** AVAILABLE WRITING GROUPS ********");
 		// print all options
@@ -532,11 +651,14 @@ public class JPABooksProject {
 		return false;
 	}
 
-	private static String promptForString(Scanner scanner, String prompt) {
-		System.out.print(prompt);
-		return scanner.nextLine();
-	}
-
+	/**
+	 * Display a list of publishers retrieved from the database,
+	 * and prompt the user for a choice.
+	 * @param scanner the scanner to use for getting input
+	 * @return the {@code Publishers} object corresponding to the user's
+	 * 			choice, or {@code null} if the user chooses to cancel or
+	 * 			there are no existing publishers in the database
+	 */
 	private static Publishers promptForPublisherChoice(Scanner scanner) {
 		List<Publishers> publishers = getPublishers();
 		if (publishers.isEmpty()) {
@@ -563,6 +685,10 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display a list of publishers as a numbered list.
+	 * @param publishers the list of publishers to display
+	 */
 	private static void displayAvailablePublishers(List<Publishers> publishers) {
 		System.out.println("\n******** AVAILABLE PUBLISHERS ********");
 		// print all options
@@ -576,6 +702,14 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Display a list of publishers retrieved from the database,
+	 * and prompt the user for a choice.
+	 * @param scanner the scanner to use for getting input
+	 * @return the {@code Authoring_Entities} object corresponding to the
+	 * 			user's choice, or {@code null} if the user chooses to
+	 * 			cancel or there are no existing authors in the database
+	 */
 	private static Authoring_Entities promptForAuthorChoice(Scanner scanner) {
 		List<Authoring_Entities> authors = getAuthors();
 		if (authors.isEmpty()) {
@@ -603,6 +737,10 @@ public class JPABooksProject {
 
 	}
 
+	/**
+	 * Display a list of authors as a numbered list.
+	 * @param authors the list of authors to display
+	 */
 	private static void displayAvailableAuthors(List<Authoring_Entities> authors) {
 		System.out.println("\n******** AVAILABLE AUTHORS ********");
 		// print all options
@@ -616,44 +754,62 @@ public class JPABooksProject {
 		}
 	}
 
+	/**
+	 * Prompt the user for a line of input. Prints the given prompt
+	 * String and then uses the given Scanner to get a user response.
+	 * @param scanner the scanner to use for getting input
+	 * @param prompt a String to prompt the user for what to enter
+	 * @return the user's input as a String
+	 */
+	private static String promptForString(Scanner scanner, String prompt) {
+		System.out.print(prompt);
+		return scanner.nextLine();
+	}
+
+	/**
+	 * Get all publishers from the database.
+	 * @return a List of publishers retrieved
+	 */
 	public static List<Publishers> getPublishers() {
 		return jpa.entityManager.createNamedQuery("ReturnAllPublishers", Publishers.class).getResultList();
 	}
 
+	/**
+	 * Get all authors from the database.
+	 * @return a List of all authoring entities retrieved
+	 */
 	public static List<Authoring_Entities> getAuthors() {
 		return jpa.entityManager.createNamedQuery("ReturnAllAuthors", Authoring_Entities.class).getResultList();
 	}
 
+	/**
+	 * Get all writing groups from the database.
+	 * @return a List of all writing groups retrieved
+	 */
 	public static List<Writing_Groups> getWritingGroups() {
-		List<Authoring_Entities> allAuthors = getAuthors();
-		Stream<Authoring_Entities> filtered = allAuthors.stream().filter(author -> author instanceof Writing_Groups);
-		List<Writing_Groups> result = new ArrayList<>();
-		for (Authoring_Entities author : filtered.toList()) {
-			result.add((Writing_Groups) author);
-		}
-		return result;
+		return jpa.entityManager.createNamedQuery("ReturnAllWritingGroups", Writing_Groups.class).getResultList();
 	}
 
+	/**
+	 * Get all individual authors from the database.
+	 * @return a List of all individual authors retrieved
+	 */
 	public static List<IndividualAuthor> getIndividualAuthors() {
-		List<Authoring_Entities> allAuthors = getAuthors();
-		Stream<Authoring_Entities> filtered = allAuthors.stream().filter(author -> author instanceof IndividualAuthor);
-		List<IndividualAuthor> result = new ArrayList<>();
-		for (Authoring_Entities author : filtered.toList()) {
-			result.add((IndividualAuthor) author);
-		}
-		return result;
+		return jpa.entityManager.createNamedQuery("ReturnAllIndividualAuthors", IndividualAuthor.class).getResultList();
 	}
 
+	/**
+	 * Get all ad hoc teams from the database.
+	 * @return a List of all ad hoc teams retrieved
+	 */
 	public static List<AdHocTeam> getAdHocTeams() {
-		List<Authoring_Entities> allAuthors = getAuthors();
-		Stream<Authoring_Entities> filtered = allAuthors.stream().filter(author -> author instanceof AdHocTeam);
-		List<AdHocTeam> result = new ArrayList<>();
-		for (Authoring_Entities author : filtered.toList()) {
-			result.add((AdHocTeam) author);
-		}
-		return result;
+		return jpa.entityManager.createNamedQuery("ReturnAllAdHocTeams", AdHocTeam.class).getResultList();
 	}
 
+	/**
+	 * Get all books from the database.
+	 * @return a List of all books retrieved
+	 */
 	public static List<Books> getBooks() {
 		return jpa.entityManager.createNamedQuery("ReturnAllBooks", Books.class).getResultList();
 	}

@@ -19,6 +19,27 @@ import java.util.Set;
 				"FROM   AUTHORING_ENTITIES ",
 		resultClass = Authoring_Entities.class
 )
+@NamedNativeQuery(
+		name="ReturnAllWritingGroups",
+		query = "SELECT * " +
+				"FROM   AUTHORING_ENTITIES " +
+				"WHERE  AUTHORING_ENTITY_TYPE = 'WritingGroup'",
+		resultClass = Writing_Groups.class
+)
+@NamedNativeQuery(
+		name="ReturnAllIndividualAuthors",
+		query = "SELECT * " +
+				"FROM   AUTHORING_ENTITIES " +
+				"WHERE  AUTHORING_ENTITY_TYPE = 'IndividualAuthor'",
+		resultClass = Writing_Groups.class
+)
+@NamedNativeQuery(
+		name="ReturnAllAdHocTeams",
+		query = "SELECT * " +
+				"FROM   AUTHORING_ENTITIES " +
+				"WHERE  AUTHORING_ENTITY_TYPE = 'AdHocTeam'",
+		resultClass = Writing_Groups.class
+)
 public abstract class Authoring_Entities {
 	@Id
 	@Column(nullable = false, length = 80)
